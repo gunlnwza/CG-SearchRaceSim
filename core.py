@@ -1,10 +1,15 @@
+from dataclasses import dataclass
 import math
 
 
+@dataclass
 class Point:
-    def __init__(self, x: int, y: int):
-        self.x = x
-        self.y = y
+    x: int
+    y: int
+
+    def __iter__(self):
+        yield self.x
+        yield self.y
 
     def dist2_to(self, other: "Point") -> int:
         return (self.x - other.x)**2 + (self.y - other.y)**2
@@ -13,18 +18,10 @@ class Point:
         return math.sqrt(self.dist2_to(other))
 
 
-class Checkpoint(Point):
-    def __init__(self, x, y):
-        super().__init__(x, y)
-
-
-Checkpoints = list[Checkpoint]
-
-
+@dataclass
 class Action:
-    def __init__(self, rotation: int, thrust: int):
-        self.rotation = rotation
-        self.thrust = thrust
+    rotation: int
+    thrust: int
     
     def __post_init__(self):
         assert -15 <= self.rotation <= 15
@@ -39,6 +36,9 @@ class Car(Point):
         self.vx = vx
         self.vy = vy
         self.angle = angle
+
+    def __repr__(self):
+        return f"Car(({self.x}, {self.y}), ({self.vx}, {self.vy}), {self.angle})"
 
     def _rotate(self, rotation_angle: int):
         self.angle = (self.angle + rotation_angle) % 360
@@ -65,7 +65,18 @@ class Car(Point):
         self._friction()
 
 
+class Checkpoint(Point):
+    def __init__(self, x: int, y: int):
+        super().__init__(x, y)
+
+    def __repr__(self):
+        return f"Checkpoint(({self.x}, {self.y}))"
+
+
+Checkpoints = list[Checkpoint]
+
+
+@dataclass
 class State:
-    def __init__(self, cp_index: int, car: Car):
-        self.cp_index = cp_index
-        self.car = car
+    cp_index: int
+    car: Car

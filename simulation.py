@@ -36,13 +36,19 @@ class Simulation:
     @property
     def game_over(self):
         return self.state.cp_index >= len(self.checkpoints)
+    
+    @property
+    def current_cp(self) -> Checkpoint | None:
+        i = self.state.cp_index
+        return self.cp(i) if i < len(self.checkpoints) else None
+
+    def cp(self, i: int) -> Checkpoint:
+        return self.checkpoints[i]
 
     def update(self, a: Action):
         car = self.state.car
-        current_cp = self.checkpoints[self.state.cp_index]
-
         car.move(a)
-        if car.dist_to(current_cp) <= Simulation.CHECKPOINT_RADIUS:
+        if car.dist_to(self.current_cp) <= Simulation.CHECKPOINT_RADIUS:
             self.state.cp_index += 1
 
     def run(self, strategy: Strategy) -> bool:
