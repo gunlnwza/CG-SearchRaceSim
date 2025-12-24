@@ -17,6 +17,38 @@ class Point:
 
     def dist_to(self, other: "Point") -> float:
         return math.sqrt(self.dist2_to(other))
+    
+    def __add__(self, other: "Point") -> "Vector":
+        return Vector(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other: "Point") -> "Vector":
+        return Vector(self.x - other.x, self.y - other.y)
+
+
+@dataclass
+class Vector(Point):
+    def norm2(self):
+        return self.x**2 + self.y**2
+
+    def norm(self):
+        return math.sqrt(self.norm2())
+
+    def dot(self, other: "Vector") -> float:
+        return self.x * other.x + self.y * other.y
+
+    def cross(self, other: "Vector") -> float:
+        return self.x * other.y - self.y * other.x
+
+    def angle_diff(self, other: "Vector") -> float:
+        """Return in radians"""
+        # u . v = |u||v|cosA
+        self_norm = self.norm()
+        other_norm = other.norm()
+        if self_norm == 0 or other_norm == 0:
+            return 0
+        dot = self.dot(other)
+        cross = self.cross(other)
+        return math.atan2(cross, dot)
 
 
 @dataclass
@@ -40,6 +72,11 @@ class Car(Point):
         self.vx = vx
         self.vy = vy
         self.angle = angle
+
+    @property
+    def facing_vector(self) -> Vector:
+        rad = math.radians(self.angle)
+        return Vector(math.cos(rad), math.sin(rad))
 
     def __repr__(self):
         return f"Car(({self.x}, {self.y}), ({self.vx}, {self.vy}), {self.angle})"

@@ -66,6 +66,5 @@ class Simulation:
 
 if __name__ == "__main__":
     sim = Simulation.from_test_file("tests/1")
-    s = Strategy()
-    res = sim.run(s)
+    res = sim.run(Strategy())
     print("OK" if res else "KO")

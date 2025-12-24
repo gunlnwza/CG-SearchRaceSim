@@ -1,4 +1,10 @@
+import math
+
 from core import Car, Checkpoints, State, Action
+
+
+def clamp(x, low, high):
+    return min(max(low, x), high)
 
 
 class Strategy:
@@ -9,5 +15,17 @@ class Strategy:
         self.checkpoints = checkpoints
 
     def best_action(self, s: State) -> Action:
-        a = Action(0, 0)
-        return a
+        car = s.car
+        cp = self.checkpoints[s.cp_index]
+
+        facing_vector = car.facing_vector
+        dir_vector = cp - car
+        angle_diff = math.degrees(facing_vector.angle_diff(dir_vector))
+        r = clamp(round(angle_diff), -Action.MAX_ROTATION, Action.MAX_ROTATION)
+
+        dist = car.dist_to(cp) * 0.05
+        t = clamp(dist, 0, Action.MAX_THRUST)
+
+        print(angle_diff, t)
+
+        return Action(r, t)
