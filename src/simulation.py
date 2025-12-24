@@ -1,5 +1,5 @@
-from core import Car, Checkpoint, Checkpoints, State, Action
-from strategy import Strategy
+from src.core import Car, Checkpoint, Checkpoints, State, Action
+from src.strategy import Strategy
 
 
 class Simulation:

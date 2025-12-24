@@ -1,6 +1,6 @@
 import math
 
-from core import Checkpoints, State, Action
+from src.core import Checkpoints, State, Action
 
 
 def clamp(x, low, high):

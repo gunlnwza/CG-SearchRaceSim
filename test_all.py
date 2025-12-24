@@ -1,7 +1,7 @@
 import glob
 
-from simulation import Simulation
-from strategy import Strategy
+from src.simulation import Simulation
+from src.strategy import Strategy
 
 if __name__ == "__main__":
     total_turns = 0
@@ -11,7 +11,7 @@ if __name__ == "__main__":
         try:
             sim = Simulation.from_test_file(path)
         except AssertionError:
-            print("Error parsing test file")
+            print("error parsing test file")
             break
 
         strategy = Strategy()

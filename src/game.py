@@ -1,11 +1,14 @@
 from typing import Optional
 import math
 
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+
 import pygame as pg
 
-from core import Action, Point
-from simulation import Simulation
-from strategy import Strategy
+from src.core import Action, Point
+from src.simulation import Simulation
+from src.strategy import Strategy
 
 
 class Game:
@@ -19,7 +22,7 @@ class Game:
     SCREEN_WIDTH = 800
     SCREEN_HEIGHT = (SCREEN_WIDTH * HEIGHT) // WIDTH
 
-    MAX_FPS = 11
+    MAX_FPS = 21
     FPS = 11
     FPS_DIFF = 5
 
