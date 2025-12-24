@@ -46,6 +46,11 @@ class Simulation:
         i = self.state.cp_index
         return self.cp(i) if i < len(self.checkpoints) else None
 
+    @property
+    def next_cp(self) -> Checkpoint | None:
+        i = self.state.cp_index + 1
+        return self.cp(i) if i < len(self.checkpoints) else None
+
     def cp(self, i: int) -> Checkpoint:
         return self.checkpoints[i]
 

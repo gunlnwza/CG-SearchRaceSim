@@ -1,14 +1,14 @@
 from typing import Optional
 import math
 
+from src.core import Action, Point, Checkpoint, Car
+from src.simulation import Simulation
+from src.strategy import Strategy
+
 import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 
 import pygame as pg
-
-from src.core import Action, Point
-from src.simulation import Simulation
-from src.strategy import Strategy
 
 
 class Game:
@@ -55,16 +55,11 @@ class Game:
         res = (length * Game.SCREEN_WIDTH) // Game.WIDTH
         return res
 
-    def render_state(self):
-        car, cp = self.sim.car_and_cp()
+    def _draw_cp(self, cp: Checkpoint, width=0):
+        pg.draw.circle(self.screen, "white", self.get_screen_point(cp),
+                       self.get_screen_length(cp.RADIUS), width)
 
-        self.screen.fill("black")
-
-        # checkpoint
-        if cp:
-            pg.draw.circle(self.screen, "white", self.get_screen_point(cp), self.get_screen_length(cp.RADIUS))
-
-        # car
+    def _draw_car(self, car: Car):
         x, y = self.get_screen_point(car)
         pg.draw.circle(self.screen, "red", (x, y), 8)
 
@@ -73,6 +68,16 @@ class Game:
         y_end = y + 25 * math.sin(rad)
         pg.draw.line(self.screen, "red", (x, y), (x_end, y_end), 3)
 
+    def render_state(self):
+        car, cp = self.sim.car_and_cp()
+        next_cp = self.sim.next_cp
+
+        self.screen.fill("black")
+        if cp:
+            self._draw_cp(cp)
+        if next_cp:
+            self._draw_cp(next_cp, width=1)
+        self._draw_car(car)
         pg.display.flip()
 
     def _get_human_action(self) -> Action:
