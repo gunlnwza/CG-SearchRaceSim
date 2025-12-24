@@ -1,5 +1,7 @@
 # Search Race
 
+Search Race is a Codingame Optimization problem where we must program the fastest racing car.
+
 ## Goal
 
 Given the car initial state, it must drive through the `N` checkpoints `L` times.
