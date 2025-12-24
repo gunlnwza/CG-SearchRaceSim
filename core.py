@@ -41,7 +41,6 @@ class Vector(Point):
 
     def angle_diff(self, other: "Vector") -> float:
         """Return in radians"""
-        # u . v = |u||v|cosA
         self_norm = self.norm()
         other_norm = other.norm()
         if self_norm == 0 or other_norm == 0:
@@ -77,6 +76,10 @@ class Car(Point):
     def facing_vector(self) -> Vector:
         rad = math.radians(self.angle)
         return Vector(math.cos(rad), math.sin(rad))
+
+    @property
+    def vel_vector(self) -> Vector:
+        return Vector(self.vx, self.vy)
 
     def __repr__(self):
         return f"Car(({self.x}, {self.y}), ({self.vx}, {self.vy}), {self.angle})"

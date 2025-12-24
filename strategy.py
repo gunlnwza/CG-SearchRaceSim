@@ -18,14 +18,22 @@ class Strategy:
         car = s.car
         cp = self.checkpoints[s.cp_index]
 
-        facing_vector = car.facing_vector
-        dir_vector = cp - car
-        angle_diff = math.degrees(facing_vector.angle_diff(dir_vector))
-        r = clamp(round(angle_diff), -Action.MAX_ROTATION, Action.MAX_ROTATION)
+        facing = car.facing_vector
+        vel = car.vel_vector
+        dir = (cp - car) - vel
 
-        dist = car.dist_to(cp) * 0.05
-        t = clamp(dist, 0, Action.MAX_THRUST)
+        angle_diff = math.degrees(facing.angle_diff(dir))
+        r = angle_diff
 
-        print(angle_diff, t)
+        dist = car.dist_to(cp)
+        k = facing.dot(dir) / dir.norm() if dir.norm() > 0 else 0
+        if k < 0.75:
+            k = 0
+        t = k * dist
 
-        return Action(r, t)
+        print(f"{r:.1f} {k:.1f} {t:.1f}")
+
+        return Action(
+            clamp(round(r), -Action.MAX_ROTATION, Action.MAX_ROTATION),
+            clamp(round(t), 0, Action.MAX_THRUST)
+        )
