@@ -21,7 +21,7 @@ class Game:
 
     MAX_FPS = 11
     FPS = 11
-    FPS_DIFF = 5    
+    FPS_DIFF = 5
 
     def __init__(self, sim: Simulation, strategy: Optional[Strategy] = None):
         self.sim = sim
@@ -50,13 +50,13 @@ class Game:
 
     def get_screen_length(self, length: int) -> float:
         res = (length * Game.SCREEN_WIDTH) // Game.WIDTH
-        return res        
+        return res
 
     def render_state(self):
         car, cp = self.sim.car_and_cp()
 
-        self.screen.fill("black")   
-        
+        self.screen.fill("black")
+
         # checkpoint
         if cp:
             pg.draw.circle(self.screen, "white", self.get_screen_point(cp), self.get_screen_length(cp.RADIUS))
@@ -74,7 +74,7 @@ class Game:
 
     def _get_human_action(self) -> Action:
         keys = pg.key.get_pressed()
-        
+
         r = 0
         if keys[pg.K_a]:
             r -= Action.MAX_ROTATION
@@ -84,7 +84,7 @@ class Game:
         t = 0
         if keys[pg.K_w]:
             t += Action.MAX_THRUST
-    
+
         return Action(r, t)
 
     def get_action(self) -> Action:
@@ -95,7 +95,7 @@ class Game:
     def run(self):
         self.render_state()
         while True:
-            dt = self.clock.tick(Game.FPS)
+            _ = self.clock.tick(Game.FPS)
 
             a = self.get_action()
             self.sim.step(a)

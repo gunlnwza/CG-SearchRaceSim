@@ -1,6 +1,6 @@
 import math
 
-from core import Car, Checkpoints, State, Action
+from core import Checkpoints, State, Action
 
 
 def clamp(x, low, high):

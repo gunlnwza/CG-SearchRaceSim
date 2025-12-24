@@ -17,7 +17,7 @@ class Point:
 
     def dist_to(self, other: "Point") -> float:
         return math.sqrt(self.dist2_to(other))
-    
+
     def __add__(self, other: "Point") -> "Vector":
         return Vector(self.x + other.x, self.y + other.y)
 
@@ -48,10 +48,10 @@ class Vector(Point):
         dot = self.dot(other)
         cross = self.cross(other)
         return math.atan2(cross, dot)
-    
+
     def __mul__(self, other: int | float) -> "Vector":
         return Vector(other * self.x, other * self.y)
-    
+
     def __rmul__(self, other: int | float) -> "Vector":
         return self.__mul__(other)
 
@@ -63,7 +63,7 @@ class Action:
 
     rotation: int
     thrust: int
-    
+
     def __post_init__(self):
         assert -Action.MAX_ROTATION <= self.rotation <= Action.MAX_ROTATION
         assert 0 <= self.thrust <= Action.MAX_THRUST
@@ -123,7 +123,7 @@ class Checkpoint(Point):
 
     def __repr__(self):
         return f"Checkpoint(({self.x}, {self.y}))"
-    
+
     def __contains__(self, other: Point):
         return self.dist_to(other) < Checkpoint.RADIUS
 

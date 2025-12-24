@@ -64,7 +64,7 @@ class State:
     checkpoints: list[Checkpoint]  # reference to a list of checkpoints
     cp_idx: int
     car: Car
-    
+
     def __repr__(self):
         return f"State(cp_idx={self.cp_idx}, {self.car})"
 
@@ -104,6 +104,8 @@ MAX_DEPTH = 3
 ROTATION_ANGLES = (-18, -6, 0, 6, 18)
 THRUSTS = (0, 100, 200)
 ACTIONS = [Action(a, t) for a in ROTATION_ANGLES for t in THRUSTS]
+
+
 def find_best_action(state: State, max_time: float = 0.050) -> Optional[Action]:
     global g_message
 
@@ -121,7 +123,7 @@ def find_best_action(state: State, max_time: float = 0.050) -> Optional[Action]:
 
             next_state = State(checkpoints, node.state.cp_idx, next_car)  # TODO: check collision with goal to update cp_idx
             next_node = Node(next_state, node, action, node.depth + 1)
-    
+
             if next_node < best_node:
                 best_node = next_node
             if next_node.depth < MAX_DEPTH:
@@ -137,6 +139,7 @@ def find_best_action(state: State, max_time: float = 0.050) -> Optional[Action]:
 
 
 g_message = ""
+
 
 # Response time for the first turn ≤ 1000 ms
 # Response time per turn ≤ 50 ms
@@ -170,6 +173,7 @@ def main():
             x, y = state.goal.point
             g_message = "COURSE CORRECTING"
             print(f"{x} {y} 0 {g_message}")
+
 
 if __name__ == "__main__":
     main()

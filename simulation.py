@@ -37,7 +37,7 @@ class Simulation:
     @property
     def game_over(self):
         return self.state.cp_index >= len(self.checkpoints)
-    
+
     @property
     def current_cp(self) -> Checkpoint | None:
         i = self.state.cp_index
@@ -45,7 +45,7 @@ class Simulation:
 
     def cp(self, i: int) -> Checkpoint:
         return self.checkpoints[i]
-    
+
     def car_and_cp(self):
         return self.state.car, self.current_cp
 
