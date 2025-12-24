@@ -19,12 +19,14 @@ class Simulation:
                     x, y, vx, vy, angle = map(int, line.split())
                     car = Car(x, y, vx, vy, angle)
                 case 1:
-                    n = int(line)
+                    nb_checkpoints, laps = map(int, line.split())
                 case _:
                     x, y = map(int, line.split())
                     checkpoints.append(Checkpoint(x, y))
 
-        assert len(checkpoints) == n
+        checkpoints *= laps
+        assert len(checkpoints) == nb_checkpoints * laps
+
         return Simulation(car, checkpoints)
 
     @classmethod
@@ -54,17 +56,12 @@ class Simulation:
         if cp and car in cp:
             self.state.cp_index += 1
 
-    def run(self, strategy: Strategy) -> bool:
+    def run(self, strategy: Strategy) -> int:
+        """Return the number of turns taken, -1 if does not finish in time"""
         strategy.read_checkpoints(self.checkpoints)
-        for _ in range(self.max_turns):
+        for t in range(self.max_turns):
             a = strategy.best_action(self.state)
             self.step(a)
             if self.game_over:
-                return True
-        return False
-
-
-if __name__ == "__main__":
-    sim = Simulation.from_test_file("tests/1")
-    res = sim.run(Strategy())
-    print("OK" if res else "KO")
+                return t
+        return -1

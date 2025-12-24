@@ -20,7 +20,9 @@ class Strategy:
 
         facing = car.facing_vector
         vel = car.vel_vector
-        dir = (cp - car) - vel
+
+        # cancel out velocity, dir will now point to the place car need to actually be
+        dir = (cp - car) - 2 * vel
 
         angle_diff = math.degrees(facing.angle_diff(dir))
         r = angle_diff
@@ -30,8 +32,6 @@ class Strategy:
         if k < 0.75:
             k = 0
         t = k * dist
-
-        print(f"{r:.1f} {k:.1f} {t:.1f}")
 
         return Action(
             clamp(round(r), -Action.MAX_ROTATION, Action.MAX_ROTATION),
