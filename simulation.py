@@ -25,7 +25,7 @@ class Simulation:
                         x, y = map(int, line.split())
                         checkpoints.append(Checkpoint(x, y))
             except ValueError:
-                raise ValueError("test file string is wrong")
+                raise AssertionError("test file string is wrong")
 
         checkpoints *= laps
         assert len(checkpoints) == nb_checkpoints * laps
