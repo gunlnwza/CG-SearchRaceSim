@@ -1,6 +1,6 @@
 import pygame as pg
 
-from core import State, Point
+from core import State, Action, Point
 from simulation import Simulation
 
 
@@ -41,7 +41,7 @@ class Game:
         
         car = self.sim.state.car
         cp = self.sim.current_cp
-        print(car, cp)
+        # print(car, cp)
 
         pg.draw.circle(self.screen, "white", self.get_screen_point(cp), self.get_screen_length(cp.RADIUS))
 
@@ -49,9 +49,30 @@ class Game:
 
         pg.display.flip()
 
+    def get_action(self) -> Action:
+        keys = pg.key.get_pressed()
+        
+        r = 0
+        if keys[pg.K_a]:
+            r -= Action.MAX_ROTATION
+        if keys[pg.K_d]:
+            r += Action.MAX_ROTATION
+        
+        t = 0
+        if keys[pg.K_w]:
+            t += Action.MAX_THRUST
+        
+        return Action(r, t)
+
+
     def run(self):
+        self.render_state(self.sim.state)
         while True:
             dt = self.clock.tick(Game.FPS)
+
+            a = self.get_action()
+            self.sim.step(a)
+
             self.render_state(self.sim.state)
 
             for e in pg.event.get():

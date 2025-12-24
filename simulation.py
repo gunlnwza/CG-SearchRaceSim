@@ -44,7 +44,7 @@ class Simulation:
     def cp(self, i: int) -> Checkpoint:
         return self.checkpoints[i]
 
-    def update(self, a: Action):
+    def step(self, a: Action):
         car = self.state.car
         car.move(a)
         if car in self.current_cp:
@@ -54,7 +54,7 @@ class Simulation:
         strategy.read_checkpoints(self.checkpoints)
         for _ in range(self.max_turns):
             a = strategy.best_action(self.state)
-            self.update(a)
+            self.step(a)
             if self.game_over:
                 return True
         return False

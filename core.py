@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import ClassVar
 import math
 
 
@@ -20,12 +21,15 @@ class Point:
 
 @dataclass
 class Action:
+    MAX_ROTATION: ClassVar[int] = 15
+    MAX_THRUST: ClassVar[int] = 200
+
     rotation: int
     thrust: int
     
     def __post_init__(self):
-        assert -15 <= self.rotation <= 15
-        assert 0 <= self.thrust <= 200
+        assert -Action.MAX_ROTATION <= self.rotation <= Action.MAX_ROTATION
+        assert 0 <= self.thrust <= Action.MAX_THRUST
 
 
 class Car(Point):
