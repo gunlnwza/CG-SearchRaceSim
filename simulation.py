@@ -4,7 +4,6 @@ from strategy import Strategy
 
 class Simulation:
     DEFAULT_MAX_TURNS = 600
-    CHECKPOINT_RADIUS = 300
 
     def __init__(self, car: Car, checkpoints: Checkpoints, *, max_turns=DEFAULT_MAX_TURNS):
         self.max_turns = max_turns
@@ -48,7 +47,7 @@ class Simulation:
     def update(self, a: Action):
         car = self.state.car
         car.move(a)
-        if car.dist_to(self.current_cp) <= Simulation.CHECKPOINT_RADIUS:
+        if car in self.current_cp:
             self.state.cp_index += 1
 
     def run(self, strategy: Strategy) -> bool:
@@ -62,7 +61,7 @@ class Simulation:
 
 
 if __name__ == "__main__":
-    sim = Simulation.from_test_file("tests/test_1.txt")
+    sim = Simulation.from_test_file("tests/1")
     s = Strategy()
     res = sim.run(s)
     print("OK" if res else "KO")

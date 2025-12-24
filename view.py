@@ -6,13 +6,13 @@ from simulation import Simulation
 
 class Game:
     X_MIN = 0
-    X_MAX = 15000
+    X_MAX = 16000
     Y_MIN = 0
-    Y_MAX = 10000
+    Y_MAX = 9000
     WIDTH = X_MAX - X_MIN
     HEIGHT = Y_MAX - Y_MIN
 
-    SCREEN_WIDTH = 700
+    SCREEN_WIDTH = 800
     SCREEN_HEIGHT = (SCREEN_WIDTH * HEIGHT) // WIDTH
     FPS = 10
 
@@ -28,9 +28,13 @@ class Game:
 
     def get_screen_point(self, point: Point) -> tuple[int, int]:
         x, y = point
-        x = ((x - Game.X_MIN) / Game.WIDTH) * Game.SCREEN_WIDTH
-        y = ((y - Game.Y_MIN) / Game.HEIGHT) * Game.SCREEN_HEIGHT
+        x = ((x - Game.X_MIN) * Game.SCREEN_WIDTH) // Game.WIDTH
+        y = ((y - Game.Y_MIN) * Game.SCREEN_HEIGHT) // Game.HEIGHT
         return x, y
+
+    def get_screen_length(self, length: int) -> float:
+        res = (length * Game.SCREEN_WIDTH) // Game.WIDTH
+        return res        
 
     def render_state(self, s: State):
         self.screen.fill("black")
@@ -39,9 +43,9 @@ class Game:
         cp = self.sim.current_cp
         print(car, cp)
 
-        pg.draw.circle(self.screen, "white", self.get_screen_point(cp), 40)
+        pg.draw.circle(self.screen, "white", self.get_screen_point(cp), self.get_screen_length(cp.RADIUS))
 
-        pg.draw.circle(self.screen, "red", self.get_screen_point(car), 10)
+        pg.draw.circle(self.screen, "red", self.get_screen_point(car), 5)
 
         pg.display.flip()
 

@@ -66,11 +66,16 @@ class Car(Point):
 
 
 class Checkpoint(Point):
+    RADIUS = 600
+
     def __init__(self, x: int, y: int):
         super().__init__(x, y)
 
     def __repr__(self):
         return f"Checkpoint(({self.x}, {self.y}))"
+    
+    def __contains__(self, other: Point):
+        return self.dist_to(other) < Checkpoint.RADIUS
 
 
 Checkpoints = list[Checkpoint]
