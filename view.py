@@ -36,17 +36,13 @@ class Game:
         res = (length * Game.SCREEN_WIDTH) // Game.WIDTH
         return res        
 
-    def render_state(self, s: State):
-        self.screen.fill("black")
-        
-        car = self.sim.state.car
-        cp = self.sim.current_cp
-        # print(car, cp)
+    def render_state(self):
+        car, cp = self.sim.car_and_cp()
 
-        pg.draw.circle(self.screen, "white", self.get_screen_point(cp), self.get_screen_length(cp.RADIUS))
-
+        self.screen.fill("black")   
+        if cp:
+            pg.draw.circle(self.screen, "white", self.get_screen_point(cp), self.get_screen_length(cp.RADIUS))
         pg.draw.circle(self.screen, "red", self.get_screen_point(car), 5)
-
         pg.display.flip()
 
     def get_action(self) -> Action:
@@ -66,14 +62,13 @@ class Game:
 
 
     def run(self):
-        self.render_state(self.sim.state)
+        self.render_state()
         while True:
             dt = self.clock.tick(Game.FPS)
 
             a = self.get_action()
             self.sim.step(a)
-
-            self.render_state(self.sim.state)
+            self.render_state()
 
             for e in pg.event.get():
                 match e.type:

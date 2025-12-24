@@ -43,11 +43,15 @@ class Simulation:
 
     def cp(self, i: int) -> Checkpoint:
         return self.checkpoints[i]
+    
+    def car_and_cp(self):
+        return self.state.car, self.current_cp
 
     def step(self, a: Action):
-        car = self.state.car
+        car, cp = self.car_and_cp()
+
         car.move(a)
-        if car in self.current_cp:
+        if cp and car in cp:
             self.state.cp_index += 1
 
     def run(self, strategy: Strategy) -> bool:
