@@ -14,7 +14,7 @@ class Strategy:
     def read_checkpoints(self, checkpoints: Checkpoints):
         self.checkpoints = checkpoints
 
-    def turns_to_reach(self, car: Car, cp: Checkpoint) -> int | None:
+    def turns_to_reach(self, car: Car, cp: Checkpoint, max_turns=100) -> int | None:
         """
         extrapolate position and velocity, estimate how long until goal
         return None if too long
@@ -23,8 +23,8 @@ class Strategy:
         vel = car.vel_vector
 
         min_dist2 = 1e9
-        for t in range(10):
-            pos = pos + vel
+        for t in range(max_turns + 1):
+            pos += vel
             dist2 = cp.dist2_to(pos)
             if dist2 < cp.RADIUS2:
                 return t
@@ -51,8 +51,9 @@ class Strategy:
         dist = dir.norm()
 
         if next_cp:
-            turns = self.turns_to_reach(car, cp)
-            if turns and turns <= 3:
+            change_target_bound = 3
+            turns = self.turns_to_reach(car, cp, change_target_bound)
+            if turns and turns <= change_target_bound:
                 a = 0.80
                 dir = a * dir + (1 - a) * (next_cp - car)
 

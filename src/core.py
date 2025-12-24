@@ -67,6 +67,16 @@ class Vector(Point):
 
     def __rmul__(self, other: int | float) -> "Vector":
         return self.__mul__(other)
+    
+    def __iadd__(self, other: "Vector") -> "Vector":
+        self.x += other.x
+        self.y += other.y
+        return self
+
+    def __isub__(self, other: "Vector") -> "Vector":
+        self.x -= other.x
+        self.y -= other.y
+        return self
 
 
 @dataclass
