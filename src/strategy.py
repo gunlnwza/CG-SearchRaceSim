@@ -1,6 +1,6 @@
 import math
 
-from src.core import Checkpoints, State, Action
+from src.core import Checkpoint, Checkpoints, State, Action, Vector, Car
 
 
 def clamp(x, low, high):
@@ -13,6 +13,26 @@ class Strategy:
 
     def read_checkpoints(self, checkpoints: Checkpoints):
         self.checkpoints = checkpoints
+
+    def turns_to_reach(self, car: Car, cp: Checkpoint) -> int | None:
+        """
+        extrapolate position and velocity, estimate how long until goal
+        return None if too long
+        """
+        pos = Vector(car.x, car.y)
+        vel = car.vel_vector
+
+        min_dist2 = 1e9
+        for t in range(10):
+            pos = pos + vel
+            dist2 = cp.dist2_to(pos)
+            if dist2 < cp.RADIUS2:
+                return t
+            if dist2 > min_dist2:
+                break
+            min_dist2 = dist2
+
+        return None
 
     def best_action(self, s: State) -> Action:
         # loading vars
@@ -27,20 +47,22 @@ class Strategy:
 
         # ---
         # calculation
+        dir = cp - car
+        dist = dir.norm()
 
-        dist = car.dist_to(cp)
-
-        dir = (cp - car) - 2 * vel
         if next_cp:
-            dir += 0.01 * (next_cp - cp)
+            turns = self.turns_to_reach(car, cp)
+            if turns and turns <= 3:
+                a = 0.80
+                dir = a * dir + (1 - a) * (next_cp - car)
 
-        dir_norm = dir.norm()
-        cosine = facing.dot(dir) / dir_norm if dir_norm > 0 else 0
-
+        dir -= 4 * vel
+        cosine = facing.cos_angle(dir)
+ 
         # ---
-        # translating `facing` and `dir` to actions
+        # translating intents into actions
         rotation = math.degrees(facing.angle(dir))
-        thrust = (cosine if cosine > 0.70 else 0) * dist
+        thrust = (cosine if cosine >= 0.6 else 0) * dist
 
         return Action(
             clamp(round(rotation), -Action.MAX_ROTATION, Action.MAX_ROTATION),

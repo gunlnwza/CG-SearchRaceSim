@@ -34,6 +34,7 @@ class Game:
             self.strategy.read_checkpoints(sim.checkpoints)
 
         pg.init()
+        pg.display.set_caption("Search Race")
         self.screen = pg.display.set_mode((Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT))
         self.clock = pg.time.Clock()
 

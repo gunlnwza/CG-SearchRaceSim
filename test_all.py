@@ -1,4 +1,5 @@
 import glob
+from pathlib import Path
 
 from src.simulation import Simulation
 from src.strategy import Strategy
@@ -7,8 +8,11 @@ from src.strategy import Strategy
 def run_tests():
     """Return total_turns, None if error"""
     total_turns = 0
+
     for path in sorted(glob.glob("tests/*")):
-        print(path, end=": ")
+        path = Path(path)
+
+        print(path.name, end=": ")
         try:
             sim = Simulation.from_test_file(path)
         except AssertionError:
