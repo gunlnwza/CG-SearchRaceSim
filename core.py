@@ -48,11 +48,17 @@ class Vector(Point):
         dot = self.dot(other)
         cross = self.cross(other)
         return math.atan2(cross, dot)
+    
+    def __mul__(self, other: int | float) -> "Vector":
+        return Vector(other * self.x, other * self.y)
+    
+    def __rmul__(self, other: int | float) -> "Vector":
+        return self.__mul__(other)
 
 
 @dataclass
 class Action:
-    MAX_ROTATION: ClassVar[int] = 15
+    MAX_ROTATION: ClassVar[int] = 18
     MAX_THRUST: ClassVar[int] = 200
 
     rotation: int
