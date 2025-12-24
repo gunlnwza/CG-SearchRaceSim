@@ -1,3 +1,5 @@
+import math
+
 import pygame as pg
 
 from core import State, Action, Point
@@ -40,9 +42,20 @@ class Game:
         car, cp = self.sim.car_and_cp()
 
         self.screen.fill("black")   
+        
+        # checkpoint
         if cp:
             pg.draw.circle(self.screen, "white", self.get_screen_point(cp), self.get_screen_length(cp.RADIUS))
-        pg.draw.circle(self.screen, "red", self.get_screen_point(car), 5)
+        
+        # car
+        x, y = self.get_screen_point(car)
+        pg.draw.circle(self.screen, "red", (x, y), 8)
+
+        rad = math.radians(car.angle)
+        x_end = x + 25 * math.cos(rad)
+        y_end = y + 25 * math.sin(rad)
+        pg.draw.line(self.screen, "red", (x, y), (x_end, y_end), 3)
+
         pg.display.flip()
 
     def get_action(self) -> Action:
