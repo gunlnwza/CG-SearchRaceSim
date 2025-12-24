@@ -14,15 +14,18 @@ class Simulation:
     def from_test_string(cls, test: str) -> "Simulation":
         checkpoints = []
         for i, line in enumerate(test.rstrip().split("\n")):
-            match i:
-                case 0:
-                    x, y, vx, vy, angle = map(int, line.split())
-                    car = Car(x, y, vx, vy, angle)
-                case 1:
-                    nb_checkpoints, laps = map(int, line.split())
-                case _:
-                    x, y = map(int, line.split())
-                    checkpoints.append(Checkpoint(x, y))
+            try:
+                match i:
+                    case 0:
+                        x, y, vx, vy, angle = map(int, line.split())
+                        car = Car(x, y, vx, vy, angle)
+                    case 1:
+                        nb_checkpoints, laps = map(int, line.split())
+                    case _:
+                        x, y = map(int, line.split())
+                        checkpoints.append(Checkpoint(x, y))
+            except ValueError:
+                raise ValueError("test file string is wrong")
 
         checkpoints *= laps
         assert len(checkpoints) == nb_checkpoints * laps
