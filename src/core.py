@@ -35,19 +35,32 @@ class Vector(Point):
 
     def dot(self, other: "Vector") -> float:
         return self.x * other.x + self.y * other.y
-
+    
     def cross(self, other: "Vector") -> float:
         return self.x * other.y - self.y * other.x
+    
+    def _norm_pair(self, other: "Vector") -> float:
+        a2 = self.norm2()
+        b2 = other.norm2()
+        if a2 == 0 or b2 == 0:
+            return None
+        return math.sqrt(a2 * b2)
 
-    def angle_diff(self, other: "Vector") -> float:
-        """Return in radians"""
-        self_norm = self.norm()
-        other_norm = other.norm()
-        if self_norm == 0 or other_norm == 0:
+    def cos_angle(self, other: "Vector") -> float:
+        den = self._norm_pair(other)
+        if not den:
             return 0
-        dot = self.dot(other)
-        cross = self.cross(other)
-        return math.atan2(cross, dot)
+        return self.dot(other) / den
+    
+    def sin_angle(self, other: "Vector") -> float:
+        den = self._norm_pair(other)
+        if not den:
+            return 0
+        return self.cross(other) / den
+
+    def angle(self, other: "Vector") -> float:
+        """Return in radians"""
+        return math.atan2(self.cross(other), self.dot(other))
 
     def __mul__(self, other: int | float) -> "Vector":
         return Vector(other * self.x, other * self.y)

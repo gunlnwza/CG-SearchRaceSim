@@ -64,12 +64,12 @@ class Simulation:
         if cp and car in cp:
             self.state.cp_index += 1
 
-    def run(self, strategy: Strategy) -> int:
-        """Return the number of turns taken, -1 if does not finish in time"""
+    def run(self, strategy: Strategy) -> int | None:
+        """Return the number of turns taken, None if does not finish in time"""
         strategy.read_checkpoints(self.checkpoints)
         for t in range(self.max_turns):
             a = strategy.best_action(self.state)
             self.step(a)
             if self.game_over:
                 return t
-        return -1
+        return None

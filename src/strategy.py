@@ -15,25 +15,34 @@ class Strategy:
         self.checkpoints = checkpoints
 
     def best_action(self, s: State) -> Action:
+        # loading vars
         car = s.car
-        cp = self.checkpoints[s.cp_index]
 
+        i = s.cp_index
+        cp = self.checkpoints[i]
+        next_cp = self.checkpoints[i + 1] if i + 1 < len(self.checkpoints) else None
+        
         facing = car.facing_vector
         vel = car.vel_vector
 
-        # cancel out velocity, dir will now point to the place car need to actually be
-        dir = (cp - car) - 2 * vel
-
-        angle_diff = math.degrees(facing.angle_diff(dir))
-        r = angle_diff
+        # ---
+        # calculation
 
         dist = car.dist_to(cp)
-        k = facing.dot(dir) / dir.norm() if dir.norm() > 0 else 0
-        if k < 0.75:
-            k = 0
-        t = k * dist
+
+        dir = (cp - car) - 2 * vel
+        if next_cp:
+            dir += 0.01 * (next_cp - cp)
+
+        dir_norm = dir.norm()
+        cosine = facing.dot(dir) / dir_norm if dir_norm > 0 else 0
+
+        # ---
+        # translating `facing` and `dir` to actions
+        rotation = math.degrees(facing.angle(dir))
+        thrust = (cosine if cosine > 0.70 else 0) * dist
 
         return Action(
-            clamp(round(r), -Action.MAX_ROTATION, Action.MAX_ROTATION),
-            clamp(round(t), 0, Action.MAX_THRUST)
+            clamp(round(rotation), -Action.MAX_ROTATION, Action.MAX_ROTATION),
+            clamp(round(thrust), 0, Action.MAX_THRUST)
         )
