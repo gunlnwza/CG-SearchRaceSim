@@ -9,6 +9,7 @@ import os
 os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 
 import pygame as pg
+pg.init()
 
 
 class Game:
@@ -26,6 +27,8 @@ class Game:
     FPS = 11
     FPS_DIFF = 5
 
+    FONT = pg.font.SysFont("Arial", 30)
+
     def __init__(self, sim: Simulation, strategy: Optional[Strategy] = None):
         self.sim = sim
 
@@ -33,7 +36,6 @@ class Game:
         if self.strategy:
             self.strategy.read_checkpoints(sim.checkpoints)
 
-        pg.init()
         pg.display.set_caption("Search Race")
         self.screen = pg.display.set_mode((Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT))
         self.clock = pg.time.Clock()
@@ -70,15 +72,20 @@ class Game:
         pg.draw.line(self.screen, "red", (x, y), (x_end, y_end), 3)
 
     def render_state(self):
+        self.screen.fill("black")
+
         car, cp = self.sim.car_and_cp()
         next_cp = self.sim.next_cp
-
-        self.screen.fill("black")
         if cp:
             self._draw_cp(cp)
         if next_cp:
             self._draw_cp(next_cp, width=1)
         self._draw_car(car)
+
+        turn_surf = Game.FONT.render(str(self.sim.t), True, (255, 255, 255))
+        turn_rect = turn_surf.get_rect(topleft=(10, 10))
+        self.screen.blit(turn_surf, turn_rect)
+
         pg.display.flip()
 
     def _get_human_action(self) -> Action:

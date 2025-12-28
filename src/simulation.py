@@ -9,6 +9,7 @@ class Simulation:
         self.max_turns = max_turns
         self.checkpoints = checkpoints
         self.state = State(0, car)
+        self.t = 0
 
     @classmethod
     def from_test_string(cls, test: str) -> "Simulation":
@@ -58,6 +59,9 @@ class Simulation:
         return self.state.car, self.current_cp
 
     def step(self, a: Action):
+        if not self.game_over:  # advance time before processing action
+            self.t += 1
+
         car, cp = self.car_and_cp()
 
         car.move(a)
@@ -67,9 +71,9 @@ class Simulation:
     def run(self, strategy: Strategy) -> int | None:
         """Return the number of turns taken, None if does not finish in time"""
         strategy.read_checkpoints(self.checkpoints)
-        for t in range(self.max_turns):
+        while self.t <= self.max_turns:
+            if self.game_over:
+                return self.t
             a = strategy.best_action(self.state)
             self.step(a)
-            if self.game_over:
-                return t
         return None

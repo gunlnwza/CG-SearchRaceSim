@@ -14,7 +14,7 @@ def get_test_file(args):
 
     file = Path(f"tests/{test}")
     if not file.is_file():
-        sys.exit(f"error openning {file}")
+        sys.exit(f"error opening {file}")
 
     return file
 

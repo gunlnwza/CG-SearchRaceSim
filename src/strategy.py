@@ -7,6 +7,10 @@ def clamp(x, low, high):
     return min(max(low, x), high)
 
 
+def softplus(x, b=1):
+    return math.log(1 + math.exp(b*x)) / b
+
+
 class Strategy:
     def __init__(self):
         self.checkpoints = None
@@ -41,7 +45,7 @@ class Strategy:
         i = s.cp_index
         cp = self.checkpoints[i]
         next_cp = self.checkpoints[i + 1] if i + 1 < len(self.checkpoints) else None
-        
+
         facing = car.facing_vector
         vel = car.vel_vector
 
@@ -54,16 +58,16 @@ class Strategy:
             change_target_bound = 3
             turns = self.turns_to_reach(car, cp, change_target_bound)
             if turns and turns <= change_target_bound:
-                a = 0.80
+                a = 0.8
                 dir = a * dir + (1 - a) * (next_cp - car)
 
         dir -= 4 * vel
         cosine = facing.cos_angle(dir)
- 
+
         # ---
         # translating intents into actions
         rotation = math.degrees(facing.angle(dir))
-        thrust = (cosine if cosine >= 0.6 else 0) * dist
+        thrust = (cosine if cosine >= 0.597 else 0) * dist
 
         return Action(
             clamp(round(rotation), -Action.MAX_ROTATION, Action.MAX_ROTATION),

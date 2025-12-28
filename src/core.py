@@ -35,10 +35,10 @@ class Vector(Point):
 
     def dot(self, other: "Vector") -> float:
         return self.x * other.x + self.y * other.y
-    
+
     def cross(self, other: "Vector") -> float:
         return self.x * other.y - self.y * other.x
-    
+
     def _norm_pair(self, other: "Vector") -> float:
         a2 = self.norm2()
         b2 = other.norm2()
@@ -51,7 +51,7 @@ class Vector(Point):
         if not den:
             return 0
         return self.dot(other) / den
-    
+
     def sin_angle(self, other: "Vector") -> float:
         den = self._norm_pair(other)
         if not den:
@@ -67,7 +67,7 @@ class Vector(Point):
 
     def __rmul__(self, other: int | float) -> "Vector":
         return self.__mul__(other)
-    
+
     def __iadd__(self, other: "Vector") -> "Vector":
         self.x += other.x
         self.y += other.y
@@ -147,7 +147,7 @@ class Checkpoint(Point):
 
     def __repr__(self):
         return f"Checkpoint(({self.x}, {self.y}))"
-    
+
     def contain(self, other: Point):
         return self.dist2_to(other) < Checkpoint.RADIUS2
 
